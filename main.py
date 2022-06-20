@@ -4,6 +4,8 @@ import jwt as jsonwt
 import json
 import os
 
+dir_path = os.path.join(os.path.dirname(os.path.realpath(__file__)),'keys')
+
 def write_data(path, data):
     ''' Open "path" for writing, creating any parent directories as needed.
     '''
@@ -19,14 +21,14 @@ class AsymetricKeyGenerator():
         self.pub_pem = key.export_to_pem()
 
     def dump_pem(self):
-        write_data('./keys/priv.pem',self.priv_pem.decode())
-        write_data('./keys/pub.pem',self.pub_pem.decode())
+        write_data(f'{dir_path}/priv.pem',self.priv_pem.decode())
+        write_data(f'{dir_path}/pub.pem',self.pub_pem.decode())
 
     def dump_jwk(self):
         pub_key = jwk.JWK.from_pem(self.pub_pem)
         keys = {"keys": [pub_key.export(as_dict=True)]}
         
-        write_data('./jwk/api_secret.jwk',json.dumps(keys, indent=4))
+        write_data(f'{dir_path}/jwk/api_secret.jwk',json.dumps(keys, indent=4))
 
     def dump(self):
         self.dump_pem()
