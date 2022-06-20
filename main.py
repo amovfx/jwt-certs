@@ -4,11 +4,11 @@ import jwt as jsonwt
 import json
 import os
 
-def safe_open_w(path):
+def write_data(path, data):
     ''' Open "path" for writing, creating any parent directories as needed.
     '''
     os.makedirs(os.path.dirname(path), exist_ok=True)
-    return open(path, 'w')
+    open(path, 'w').write(data)
 
 
 class AsymetricKeyGenerator():
@@ -19,23 +19,26 @@ class AsymetricKeyGenerator():
         self.pub_pem = key.export_to_pem()
 
     def dump_pem(self):
-
-        safe_open_w('./keys/priv.pem').write(self.priv_pem.decode())
-        safe_open_w('./keys/pub.pem').write(self.pub_pem.decode())
+        write_data('./keys/priv.pem',self.priv_pem.decode())
+        write_data('./keys/pub.pem',self.pub_pem.decode())
 
     def dump_jwk(self):
         pub_key = jwk.JWK.from_pem(self.pub_pem)
         keys = {"keys": [pub_key.export(as_dict=True)]}
-        pub_key = jwk.JWK.from_pem(self.pub_pem)
-        safe_open_w('./jwk/api_secret.jwk').write(json.dumps(keys, indent=4))
+        
+        write_data('./jwk/api_secret.jwk',json.dumps(keys, indent=4))
+
+    def dump(self):
+        self.dump_pem()
+        self.dump_jwk()
+
 
 
 @click.command()
 @click.argument('size', default='2048')
 def make_certs(size):
     Keys = AsymetricKeyGenerator(size)
-    Keys.dump_pem()
-    Keys.dump_jwk()
+    Keys.dump()
     
 
 
