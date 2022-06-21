@@ -11,6 +11,7 @@ This class dumps .pem files and .jwt files
 
 import os
 import json
+import warnings
 
 from dotenv import dotenv_values
 from jwcrypto import jwk
@@ -34,12 +35,13 @@ class AsymetricKeyGenerator():
     Class to generate RSA certs.
     """
 
-    def __init__(self,size):
+    def __init__(self,size: int):
         """
         Initialize Key henerator and generate private and public pem
         """
-
-        key = jwk.JWK.generate(kty='RSA', size=int(size))
+        if (size < 512): 
+            warnings.warn(f"Size of {size} is too small, defaulting to 512")
+        key = jwk.JWK.generate(kty='RSA', size=max(int(size),512))
         self._priv_pem = key.export_to_pem(private_key=True, password=None)
         self._pub_pem = key.export_to_pem()
 
@@ -58,7 +60,8 @@ class AsymetricKeyGenerator():
 
         pub_key = jwk.JWK.from_pem(self._pub_pem)
         keys = {"keys": [pub_key.export(as_dict=True)]}
-        write_data(f'jwk/{config["JWT_FILE"]}',json.dumps(keys, indent=4))
+        file_name = os.path.join("jwk",config["JWT_FILE"])
+        write_data(file_name,json.dumps(keys, indent=4))
 
     def dump(self):
         """
@@ -67,3 +70,4 @@ class AsymetricKeyGenerator():
 
         self.dump_pem()
         self.dump_jwk()
+        
