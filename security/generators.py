@@ -30,7 +30,7 @@ def write_data(file_path, data):
     open(file_output, 'w', encoding='utf8').write(data)
 
 
-class AsymetricKeyGenerator():
+class AsymmetricKeyGenerator():
     """
     Class to generate RSA certs.
     """

@@ -10,7 +10,7 @@ This app was made for generating certs for nginx. It can be easily extended nad 
 
 
 import click
-from security.generators import AsymetricKeyGenerator
+from security.generators import AsymmetricKeyGenerator
 
 @click.command()
 @click.argument('size', default='2048')
@@ -18,7 +18,7 @@ def make_certs(size):
     """
     Main click command to make and generate certs.
     """
-    keys = AsymetricKeyGenerator(size)
+    keys = AsymmetricKeyGenerator(size)
     keys.dump()
 
 if __name__ == '__main__':
