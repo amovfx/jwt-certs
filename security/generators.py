@@ -35,7 +35,7 @@ class AsymmetricKeyGenerator():
     Class to generate RSA certs.
     """
 
-    def __init__(self,size: int):
+    def __init__(self ,size: int) -> None:
         """
         Initialize Key henerator and generate private and public pem
         """
@@ -49,7 +49,7 @@ class AsymmetricKeyGenerator():
         pub_key = jwk.JWK.from_pem(self._pub_pem)
         self._jwk = {"keys": [pub_key.export(as_dict=True)]}
 
-    def dump_pem(self):
+    def dump_pem(self) -> None:
         """
         Write out private and public pems to relative location of this file.
         """
@@ -57,7 +57,7 @@ class AsymmetricKeyGenerator():
         write_data('priv.pem',self._priv_pem.decode())
         write_data('pub.pem',self._pub_pem.decode())
 
-    def dump_jwk(self):
+    def dump_jwk(self) -> None:
         """
         Export pub_key to .jwk.
         """
@@ -65,7 +65,7 @@ class AsymmetricKeyGenerator():
         file_name = os.path.join("jwk",config["JWT_FILE"])
         write_data(file_name,json.dumps(self._jwk, indent=4))
 
-    def dump(self):
+    def dump(self) -> None:
         """
         Export both pem and .jwk.
         """
