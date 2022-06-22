@@ -42,8 +42,12 @@ class AsymmetricKeyGenerator():
         if (size < 512): 
             warnings.warn(f"Size of {size} is too small, defaulting to 512")
         key = jwk.JWK.generate(kty='RSA', size=max(int(size),512))
+        
         self._priv_pem = key.export_to_pem(private_key=True, password=None)
         self._pub_pem = key.export_to_pem()
+        
+        pub_key = jwk.JWK.from_pem(self._pub_pem)
+        self._jwk = {"keys": [pub_key.export(as_dict=True)]}
 
     def dump_pem(self):
         """
@@ -57,11 +61,9 @@ class AsymmetricKeyGenerator():
         """
         Export pub_key to .jwk.
         """
-
-        pub_key = jwk.JWK.from_pem(self._pub_pem)
-        keys = {"keys": [pub_key.export(as_dict=True)]}
+        
         file_name = os.path.join("jwk",config["JWT_FILE"])
-        write_data(file_name,json.dumps(keys, indent=4))
+        write_data(file_name,json.dumps(self._jwk, indent=4))
 
     def dump(self):
         """
@@ -70,4 +72,28 @@ class AsymmetricKeyGenerator():
 
         self.dump_pem()
         self.dump_jwk()
+        
+    def get_priv_key(self) -> bytes:
+        """Return byte object of priv key
+
+        Returns:
+            bytes: private key
+        """
+        return self._priv_pem
+    
+    def get_pub_key(self) -> bytes:
+        """Return byte object of pub key
+
+        Returns:
+            bytes: public key
+        """
+        return self._pub_pem
+    
+    def get_jwk(self) -> dict:
+        """Return the jwk dcit.
+
+        Returns:
+            dict: full jwk dict
+        """
+        return self._jwk
         
