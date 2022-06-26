@@ -1,0 +1,10 @@
+version: '3.3'
+
+services:
+  jwt-certs:
+    build:
+      context: '.'
+      dockerfile: Dockerfile
+    volumes:
+      - ./keys/:/certs/
+    command: ["python", "./main.py"]

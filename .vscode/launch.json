@@ -16,14 +16,14 @@
     },
 
     {
-      "name": "Python: Current File",
+      "name": "Main",
       "type": "python",
       "request": "launch",
-      "program": "${file}",
+      "program": "main.py",
       "console": "integratedTerminal",
-      "cwd": "${workspaceFolder}",
       "env": { "PYTHONPATH": "${cwd}" },
       "envFile": "${workspaceFolder}/.env",
+      "cwd": "${workspaceRoot}"
     }
   ]
 }

@@ -16,6 +16,7 @@ platformdirs==2.5.2
 pluggy==1.0.0
 py==1.11.0
 pycparser==2.21
+pydantic==1.9.1
 PyJWT==2.4.0
 pylint==2.14.3
 pyparsing==3.0.9
